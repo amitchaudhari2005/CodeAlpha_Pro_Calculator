@@ -1,67 +1,577 @@
 # CodeAlpha_Pro_Calculator
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADE BY AMIT CHAUDHARI PRO CALCULATOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-100px) translateX(50px);
+            }
+            50% {
+                transform: translateY(-50px) translateX(100px);
+            }
+            75% {
+                transform: translateY(-150px) translateX(-50px);
+            }
+        }
+        
+        .calculator-container {
+            position: relative;
+            z-index: 10;
+            width: 350px;
+            padding: 20px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .calculator-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 35px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+        
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+        
+        .calculator-title {
+            color: white;
+            font-weight: 500;
+            font-size: 18px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .calculator-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .control-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background-color: #ff5f57; }
+        .dot-yellow { background-color: #febc2e; }
+        .dot-green { background-color: #28c840; }
+        
+        .display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        
+        .expression {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            min-height: 24px;
+            text-align: right;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        
+        #result {
+            color: white;
+            font-size: 40px;
+            font-weight: 500;
+            text-align: right;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+            word-break: break-all;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        button {
+            border: none;
+            height: 65px;
+            border-radius: 16px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+            pointer-events: none;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 15px rgba(0, 0, 0, 0.2),
+                0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 5px rgba(0, 0, 0, 0.2),
+                0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Number buttons */
+        button:not(.operator):not(.equals):not(.clear) {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Operator buttons */
+        .operator {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffcc00;
+        }
+        
+        /* Equals button */
+        .equals {
+            background: linear-gradient(45deg, #ff9966, #ff5e62);
+            font-weight: 600;
+        }
+        
+        /* Clear button */
+        .clear {
+            background: linear-gradient(45deg, #ff5e62, #ff9966);
+        }
+        
+        /* Button press animation */
+        .button-active {
+            transform: scale(0.95) translateY(2px) !important;
+            box-shadow: 
+                0 2px 3px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 400px) {
+            .calculator-container {
+                width: 90%;
+                padding: 15px;
+            }
+            
+            .buttons {
+                gap: 8px;
+            }
+            
+            button {
+                height: 55px;
+                font-size: 18px;
+            }
+            
+            #result {
+                font-size: 32px;
+            }
+        }
+        
+        /* Glow effect */
+        .glow {
+            animation: glow 1s ease-out;
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.3) inset; }
+            100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) inset; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles background -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="calculator-container" id="calculator">
+        <div class="calculator-header">
+            <div class="calculator-controls">
+                <div class="control-dot dot-red"></div>
+                <div class="control-dot dot-yellow"></div>
+                <div class="control-dot dot-green"></div>
+            </div>
+            <div class="calculator-title">Pro Calculator</div>
+        </div>
+        
+        <div class="display">
+            <div class="expression" id="expression"></div>
+            <div id="result">0</div>
+        </div>
+        
+        <div class="buttons">
+            <button class="clear" data-key="Escape">C</button>
+            <button class="operator" data-key="Backspace">⌫</button>
+            <button class="operator" data-key="%">%</button>
+            <button class="operator" data-key="/" data-op="÷">÷</button>
+            
+            <button data-key="7">7</button>
+            <button data-key="8">8</button>
+            <button data-key="9">9</button>
+            <button class="operator" data-key="*" data-op="×">×</button>
+            
+            <button data-key="4">4</button>
+            <button data-key="5">5</button>
+            <button data-key="6">6</button>
+            <button class="operator" data-key="-" data-op="−">−</button>
+            
+            <button data-key="1">1</button>
+            <button data-key="2">2</button>
+            <button data-key="3">3</button>
+            <button class="operator" data-key="+" data-op="+">+</button>
+            
+            <button data-key="0">0</button>
+            <button data-key=".">.</button>
+            <button data-key="(" data-op="(">(</button>
+            <button class="equals" data-key="Enter" data-op="=">=</button>
+        </div>
+    </div>
 
-Project Overview
-
-A professional-grade calculator web application developed for the CodeAlpha internship program. This calculator combines stunning visual design with comprehensive functionality, creating an intuitive and engaging user experience.
-
-Live Demo
-
-https://amitchaudhari2005.github.io/CodeAlpha_Pro_Calculator/
- - 
-Coming soon
-
-Screenshots
-
-Features
-
-Beautiful UI/UX Design
-Animated gradient background with floating particles
-Glass-morphism design with subtle shadows and highlights
-Mac-style window controls for a premium look
-Responsive layout that works on all devices
-Advanced Calculator Functionality
-Basic arithmetic operations (addition, subtraction, multiplication, division)
-Percentage calculations
-Parentheses support for complex expressions
-Backspace functionality
-Clear function
-Enhanced User Experience
-Visual feedback when buttons are pressed
-Glow effect when calculations are completed
-Expression history display
-Clean, modern typography with the Montserrat font
-Technologies Used
-
-HTML5
-CSS3 (animations, gradients, glass-morphism)
-JavaScript (ES6+)
-Responsive design principles
-Installation & Usage
-
-Clone the repository:
-git clone https://github.com/amitchaudhari2005/CodeAlpha_Pro_Calculator.git
-Open 
-index.html
- in your browser
-Future Enhancements
-
-Scientific calculator functions
-Theme customization options
-Calculation history storage
-Memory functions
-Contributing
-
-Contributions, issues, and feature requests are welcome. Feel free to check the 
-https://github.com/amitchaudhari2005/CodeAlpha_Pro_Calculator/issues
- if you want to contribute.
-
-Author
-
-Amit Chaudhari - 
-https://github.com/amitchaudhari2005
-Acknowledgements
-
-CodeAlpha Internship Program for the project opportunity
-Inspiration from modern calculator designs
+    <script>
+        // Create floating particles
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5px and 20px
+                const size = Math.random() * 15 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random opacity
+                particle.style.opacity = `${Math.random() * 0.5 + 0.1}`;
+                
+                // Random animation delay
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // Random animation duration
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        });
+        
+        // Calculator functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const result = document.getElementById('result');
+            const expression = document.getElementById('expression');
+            const buttons = document.querySelectorAll('button');
+            const calculator = document.getElementById('calculator');
+            
+            let currentInput = '0';
+            let currentExpression = '';
+            let lastResult = null;
+            let waitingForOperand = false;
+            
+            // Map for keyboard input animation
+            const keyMap = {};
+            buttons.forEach(button => {
+                const key = button.getAttribute('data-key');
+                if (key) {
+                    keyMap[key] = button;
+                }
+            });
+            
+            // Update display with animation
+            function updateDisplay() {
+                result.textContent = currentInput;
+                expression.textContent = currentExpression;
+            }
+            
+            // Clear all
+            function clearAll() {
+                currentInput = '0';
+                currentExpression = '';
+                lastResult = null;
+                waitingForOperand = false;
+                updateDisplay();
+            }
+            
+            // Backspace
+            function backspace() {
+                if (currentInput.length > 1) {
+                    currentInput = currentInput.slice(0, -1);
+                } else {
+                    currentInput = '0';
+                }
+                updateDisplay();
+            }
+            
+            // Calculate result with animation
+            function calculate() {
+                try {
+                    // Replace display symbols with JavaScript operators
+                    let evalExpression = currentExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+                    
+                    // Add the current input if needed
+                    if (!waitingForOperand) {
+                        evalExpression += currentInput;
+                    } else {
+                        // Remove the last operator if no operand was entered
+                        evalExpression = evalExpression.slice(0, -1);
+                    }
+                    
+                    // Calculate
+                    const calculatedResult = eval(evalExpression);
+                    
+                    // Format the result
+                    if (calculatedResult === Infinity || calculatedResult === -Infinity) {
+                        currentInput = 'Error';
+                    } else {
+                        // Handle decimal precision
+                        if (Number.isInteger(calculatedResult)) {
+                            currentInput = calculatedResult.toString();
+                        } else {
+                            // Limit decimal places to avoid very long numbers
+                            currentInput = calculatedResult.toFixed(8).replace(/\.?0+$/, '');
+                        }
+                    }
+                    
+                    lastResult = currentInput;
+                    currentExpression = '';
+                    waitingForOperand = false;
+                    
+                    // Add glow effect on calculation
+                    calculator.classList.add('glow');
+                    setTimeout(() => {
+                        calculator.classList.remove('glow');
+                    }, 1000);
+                    
+                } catch (error) {
+                    currentInput = 'Error';
+                    currentExpression = '';
+                    waitingForOperand = false;
+                }
+                updateDisplay();
+            }
+            
+            // Handle number input
+            function inputDigit(digit) {
+                if (waitingForOperand) {
+                    currentInput = digit;
+                    waitingForOperand = false;
+                } else {
+                    currentInput = currentInput === '0' ? digit : currentInput + digit;
+                }
+                updateDisplay();
+            }
+            
+            // Handle decimal point
+            function inputDecimal() {
+                if (waitingForOperand) {
+                    currentInput = '0.';
+                    waitingForOperand = false;
+                } else if (currentInput.indexOf('.') === -1) {
+                    currentInput += '.';
+                }
+                updateDisplay();
+            }
+            
+            // Handle operator
+            function inputOperator(operator) {
+                const displayOperator = operator === '*' ? '×' : 
+                                       operator === '/' ? '÷' : 
+                                       operator === '-' ? '−' : operator;
+                
+                if (waitingForOperand) {
+                    // Replace the last operator
+                    currentExpression = currentExpression.slice(0, -1) + displayOperator;
+                } else {
+                    // Add the current input and the operator to the expression
+                    currentExpression += currentInput + displayOperator;
+                    waitingForOperand = true;
+                }
+                
+                // If there was a previous calculation, use that result
+                if (lastResult !== null && currentInput === lastResult) {
+                    lastResult = null;
+                }
+                
+                updateDisplay();
+            }
+            
+            // Handle percentage
+            function inputPercent() {
+                if (currentInput !== '0') {
+                    const value = parseFloat(currentInput) / 100;
+                    currentInput = value.toString();
+                    updateDisplay();
+                }
+            }
+            
+            // Handle parenthesis
+            function inputParenthesis() {
+                if (currentInput === '0' || waitingForOperand) {
+                    currentExpression += '(';
+                    waitingForOperand = false;
+                } else {
+                    currentExpression += currentInput + '*(';
+                    waitingForOperand = true;
+                }
+                currentInput = '0';
+                updateDisplay();
+            }
+            
+            // Button click handler with enhanced animation
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.textContent;
+                    
+                    // Add active class for animation
+                    button.classList.add('button-active');
+                    setTimeout(() => {
+                        button.classList.remove('button-active');
+                    }, 150);
+                    
+                    if (value >= '0' && value <= '9') {
+                        inputDigit(value);
+                    } else if (value === '.') {
+                        inputDecimal();
+                    } else if (value === 'C') {
+                        clearAll();
+                    } else if (value === '⌫') {
+                        backspace();
+                    } else if (value === '%') {
+                        inputPercent();
+                    } else if (value === '=') {
+                        calculate();
+                    } else if (value === '(') {
+                        inputParenthesis();
+                    } else {
+                        // Operators: +, −, ×, ÷
+                        const op = button.getAttribute('data-op');
+                        if (op) {
+                            inputOperator(op);
+                        }
+                    }
+                });
+            });
+            
+            // Keyboard support with enhanced animation
+            document.addEventListener('keydown', (event) => {
+                const key = event.key;
+                
+                // Animate the corresponding button if it exists
+                if (keyMap[key]) {
+                    keyMap[key].classList.add('button-active');
+                    setTimeout(() => {
+                        keyMap[key].classList.remove('button-active');
+                    }, 150);
+                    
+                    // Trigger the button's click event
+                    keyMap[key].click();
+                    event.preventDefault();
+                }
+            });
+            
+            // Initialize display
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>  
